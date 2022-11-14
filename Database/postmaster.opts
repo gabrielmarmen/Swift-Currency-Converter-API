@@ -1,0 +1,1 @@
+/Applications/Postgres.app/Contents/Versions/15/bin/postgres "-D" "/Users/gabrielmarmen/Documents/DEV/GIT PROJECTS/Swift-Currency-Converter-API/Database" "-p" "5432"

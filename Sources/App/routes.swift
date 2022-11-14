@@ -6,15 +6,9 @@ func routes(_ app: Application) throws {
         "It works!"
     }
 
-    app.get("echange-rates","latest") { req async -> String in
-        "Latest rates not available yet."
-        //Add logic to get latest exchangerate from database
-    }
-    
-    app.get("echange-rates","one-hour") { req async -> String in
-        "The exchange rates are not available yet."
-        //Add logic to get latest exchangerate from database
+    app.get("exchange-rates","latest") { req async  in
+        
+        try! await ExchangeRate.query(on: req.db).first() ?? ExchangeRate.exempleExchangeRate
     }
 
-    try app.register(collection: TodoController())
 }
