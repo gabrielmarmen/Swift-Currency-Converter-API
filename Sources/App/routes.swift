@@ -6,9 +6,12 @@ func routes(_ app: Application) throws {
         "It works!"
     }
 
-    app.get("exchange-rates","latest") { req async  in
-        
-        try! await ExchangeRate.query(on: req.db).first() ?? ExchangeRate.exempleExchangeRate
+    app.get("exchange-rates","latest") { req in
+        if let allExchangeRates = try? await ExchangeRate.query(on: req.db).all() {
+            let json = try JSONEncoder().encode(allExchangeRates)
+            return String(data: json, encoding: .utf8)!
+        }
+        return "Not found"
     }
 
 }
