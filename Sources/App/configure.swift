@@ -1,6 +1,9 @@
 import Fluent
 import FluentPostgresDriver
 import Vapor
+import Queues
+import QueuesRedisDriver
+
 
 // configures your application
 public func configure(_ app: Application) throws {
@@ -20,4 +23,8 @@ public func configure(_ app: Application) throws {
 
     // register routes
     try routes(app)
+    app.redis.configuration = try RedisConfiguration(hostname: "localhost")
+    try app.queues.use(.redis(url: "redis://127.0.0.1:6379"))
+    
+    try app.queues.startScheduledJobs()
 }

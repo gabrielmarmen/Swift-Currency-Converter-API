@@ -12,7 +12,7 @@ struct CreateExchangeRate: Migration {
     func prepare(on database: FluentKit.Database) -> NIOCore.EventLoopFuture<Void> {
         database.schema("exchange_rates")
             .id()
-            .field("date_time", .datetime, .required)
+            .field("date_time", .int, .required)
             .field("conversion_rates", .dictionary(of: .double), .required)
             .create()
         

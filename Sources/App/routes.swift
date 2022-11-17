@@ -7,11 +7,25 @@ func routes(_ app: Application) throws {
     }
 
     app.get("exchange-rates","latest") { req in
-        if let allExchangeRates = try? await ExchangeRate.query(on: req.db).all() {
-            let json = try JSONEncoder().encode(allExchangeRates)
-            return String(data: json, encoding: .utf8)!
+        
+        let allExchangeRates = try await ExchangeRate.query(on: req.db)
+            .filter(\.$dateTime > Int(Date.now.timeIntervalSince1970) - 400)
+            .all()
+        
+        if allExchangeRates.isEmpty {
+            throw Abort(.notFound)
+        }else {
+           return allExchangeRates
         }
-        return "Not found"
     }
+    
+    app.get("test") { req in
+        "'Test' route is working"
+    }
+    
+    app.get("redis") { req in
+        return req.redis.ping()
+    }
+    
 
 }
