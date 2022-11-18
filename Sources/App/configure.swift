@@ -3,6 +3,7 @@ import FluentPostgresDriver
 import Vapor
 import Queues
 import QueuesRedisDriver
+import Jobs
 
 
 // configures your application
@@ -14,8 +15,8 @@ public func configure(_ app: Application) throws {
     app.databases.use(.postgres(
         hostname: "localhost",
         port: PostgresConfiguration.ianaPortNumber,
-        username: "postgres",
-        password: "",
+        username: "admin",
+        password: "admin",
         database: "currencyconverter"
     ), as: .psql)
 
@@ -26,5 +27,11 @@ public func configure(_ app: Application) throws {
     app.redis.configuration = try RedisConfiguration(hostname: "localhost")
     try app.queues.use(.redis(url: "redis://127.0.0.1:6379"))
     
+    app.queues.schedule(GetLatestExchangeRateJob(app: app))
+        .at(Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + 5))
+    
     try app.queues.startScheduledJobs()
+    
+
+    
 }

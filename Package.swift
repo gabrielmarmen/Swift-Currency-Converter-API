@@ -13,6 +13,7 @@ let package = Package(
         .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.0.0"),
         .package(url: "https://github.com/vapor/redis.git", from: "4.0.0"),
         .package(url: "https://github.com/vapor/queues-redis-driver.git", from: "1.0.0"),
+        .package(url: "https://github.com/BrettRToomey/Jobs.git", from: "1.1.1")
         
         
     ],
@@ -25,6 +26,7 @@ let package = Package(
                 .product(name: "Vapor", package: "vapor"),
                 .product(name: "Redis", package: "redis"),
                 .product(name: "QueuesRedisDriver", package: "queues-redis-driver"),
+                .product(name: "Jobs", package: "Jobs")
                 
             ],
             swiftSettings: [

@@ -8,11 +8,12 @@ final class ExchangeRate: Model, Content {
     var id: UUID?
     
     @Field(key: "date_time")
-    var dateTime: Int
+    var timestamp: Int
     
     @Field(key: "conversion_rates")
-    var exchangeRateTable: [String: Double]
+    var rates: [String: Double]
 
+    
     static var exempleExchangeRate: ExchangeRate {
         let  tempExchangeRate = ExchangeRate(exchangeRateTable: ["USD":1,
                                                                  "AED":3.6725,
@@ -25,22 +26,25 @@ final class ExchangeRate: Model, Content {
     }
     
     var convertedDateTime: Date {
-        Date(timeIntervalSince1970: Double(dateTime))
+        Date(timeIntervalSince1970: Double(timestamp))
     }
     
     init() { }
 
     init(id: UUID? = nil, exchangeRateTable: [String: Double]) {
         self.id = id
-        self.dateTime = Int(Date.now.timeIntervalSince1970)
-        self.exchangeRateTable = exchangeRateTable
+        self.timestamp = Int(Date.now.timeIntervalSince1970)
+        self.rates = exchangeRateTable
     }
     
     init(id: UUID? = nil, exchangeRateTable: [String: Double], dateTime: Int) {
         self.id = id
-        self.dateTime = dateTime
-        self.exchangeRateTable = exchangeRateTable
+        self.timestamp = dateTime
+        self.rates = exchangeRateTable
     }
     
     
 }
+
+
+
