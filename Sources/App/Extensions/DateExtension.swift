@@ -14,10 +14,35 @@ extension Date {
         let year = calendar.component(.year, from: date)
         let month = calendar.component(.month, from: date)
         let day = calendar.component(.day, from: date)
-        let hour = calendar.component(.hour, from: date)
-        let minutes = calendar.component(.minute, from: date)
-        let seconds = calendar.component(.second, from: date)
         
-        return "[\(year)-\(month)-\(day) - \(hour):\(minutes):\(seconds)]"
+        return "[\(String(format: "%02d-%02d-%02d", year, month, day)) - \(date.formattedTime)]"
     }
+    
+    var formattedTime: String {
+        let calendar = Calendar.current
+        var components = [Int]()
+        var string = ""
+        
+        components.append(calendar.component(.hour, from: self))
+        components.append(calendar.component(.minute, from: self))
+        components.append(calendar.component(.second, from: self))
+        
+        for i in 0..<3   {
+            if components[i] < 10 {
+                string.append("0")
+                string.append(contentsOf: String(components[i]))
+            }
+            else {
+                string.append(contentsOf: String(components[i]))
+            }
+            if i != 2 {
+                string.append(":")
+            }
+        }
+        return string
+    }
+    
+    
+    
 }
+

@@ -13,24 +13,28 @@ struct GetLatestExchangeRateJob: AsyncScheduledJob {
     
     func run(context: Queues.QueueContext) async throws {
         
-        let url = URL(string: "https://api.apilayer.com/exchangerates_data/latest?base=USD&apikey=IpUgMSLO7llA73jcvjiANZCAgCHsxx7H")
+        let url = URL(string: "https://api.apilayer.com/exchangerates_data/latest?base=USD&apikey=30ZK03j1Mw4pdlxzG5c5ByhA1lGudvRj")
             
         do {
             let (data, _) =  try await URLSession.shared.data(from: url!)
             let exchangeRates = try JSONDecoder().decode(ExchangeRate.self, from: data)
             let _ = try await exchangeRates.save(on: app.db)
             print("\(Date.debugTimeStamp) Pulled latest exchange rates and updated database.")
+            if Environment.get("enableUpdatingExchangeRates")! == "true"{
+                app.queues.schedule(GetLatestExchangeRateJob(app: app))
+                    .at(Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + 300))
+                try app.queues.startScheduledJobs()
+                print("\(Date.debugTimeStamp) Next update scheduled at \(Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + 300).formattedTime)")
+            }
         }
         catch {
             app.queues.schedule(GetLatestExchangeRateJob(app: app))
                 .at(Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + 300))
             try app.queues.startScheduledJobs()
-            print("An error occured while getting latest exchange rates. Error: " + String(describing: error))
+            print("\(Date.debugTimeStamp) An error occured while getting latest exchange rates. Error: " + String(describing: error))
         }
         
-        app.queues.schedule(GetLatestExchangeRateJob(app: app))
-            .at(Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + 300))
-        try app.queues.startScheduledJobs()
+        
     }
     
     

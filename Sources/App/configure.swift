@@ -24,13 +24,18 @@ public func configure(_ app: Application) throws {
 
     // register routes
     try routes(app)
+    
+    //Configuring redis (for ScheduledJobs)
     app.redis.configuration = try RedisConfiguration(hostname: "localhost")
     try app.queues.use(.redis(url: "redis://127.0.0.1:6379"))
     
-    app.queues.schedule(GetLatestExchangeRateJob(app: app))
-        .at(Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + 5))
     
+    //Scheduling and starting ScheduledJobs
+    app.queues.schedule(GetLatestExchangeRateJob(app: app))
+        .at(Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + 1))
     try app.queues.startScheduledJobs()
+    
+    
     
 
     

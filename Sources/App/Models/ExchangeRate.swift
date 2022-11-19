@@ -13,6 +13,7 @@ final class ExchangeRate: Model, Content {
     @Field(key: "conversion_rates")
     var rates: [String: Double]
 
+   
     
     static var exempleExchangeRate: ExchangeRate {
         let  tempExchangeRate = ExchangeRate(exchangeRateTable: ["USD":1,
