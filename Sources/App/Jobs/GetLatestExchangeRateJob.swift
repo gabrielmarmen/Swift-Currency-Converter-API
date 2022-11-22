@@ -20,12 +20,12 @@ struct GetLatestExchangeRateJob: AsyncScheduledJob {
             let exchangeRates = try JSONDecoder().decode(ExchangeRate.self, from: data)
             let _ = try await exchangeRates.save(on: app.db)
             print("\(Date.debugTimeStamp) Pulled latest exchange rates and updated database.")
-            if Environment.get("enableUpdatingExchangeRates")! == "true"{
+            //if Environment.get("enableUpdatingExchangeRates") ?? "true" == "true"{
                 app.queues.schedule(GetLatestExchangeRateJob(app: app))
                     .at(Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + 300))
                 try app.queues.startScheduledJobs()
                 print("\(Date.debugTimeStamp) Next update scheduled at \(Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + 300).formattedTime)")
-            }
+            //}
         }
         catch {
             app.queues.schedule(GetLatestExchangeRateJob(app: app))
