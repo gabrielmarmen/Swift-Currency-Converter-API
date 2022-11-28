@@ -19,6 +19,12 @@ struct GetLatestExchangeRateJob: AsyncScheduledJob {
             print("\(Date.debugTimeStamp) Pulling exchange rates ...")
             let (data, _) =  try await URLSession.shared.data(from: url!)
             let exchangeRates = try JSONDecoder().decode(ExchangeRate.self, from: data)
+            
+            //Manually adding exchangeRates that are pegged to other currencies
+            exchangeRates.rates["KID"] = exchangeRates.rates["AUD"]
+            exchangeRates.rates["TVD"] = exchangeRates.rates["AUD"]
+            exchangeRates.rates["FOK"] = exchangeRates.rates["DKK"]
+            
             let _ = try await exchangeRates.save(on: app.db)
             print("\(Date.debugTimeStamp) Pulled latest exchange rates and updated database.")
             if Environment.get("enableUpdatingExchangeRates") ?? "true" == "true"{
