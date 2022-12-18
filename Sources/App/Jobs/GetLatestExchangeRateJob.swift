@@ -14,6 +14,7 @@ struct GetLatestExchangeRateJob: AsyncScheduledJob {
     func run(context: Queues.QueueContext) async throws {
         
         let url = URL(string: "https://api.apilayer.com/exchangerates_data/latest?base=USD&apikey=30ZK03j1Mw4pdlxzG5c5ByhA1lGudvRj")
+        let nextRunDate = Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + 300)
         
         do {
             print("\(Date.debugTimeStamp) Pulling exchange rates ...")
@@ -29,9 +30,9 @@ struct GetLatestExchangeRateJob: AsyncScheduledJob {
             print("\(Date.debugTimeStamp) Pulled latest exchange rates and updated database.")
             if Environment.get("enableUpdatingExchangeRates") ?? "true" == "true"{
                 app.queues.schedule(GetLatestExchangeRateJob(app: app))
-                    .at(Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + 300))
+                    .at(nextRunDate)
                 try app.queues.startScheduledJobs()
-                print("\(Date.debugTimeStamp) Next update scheduled at \(Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + 300).formattedTime)")
+                print("\(Date.debugTimeStamp) Next update scheduled at \(nextRunDate.formattedTime)")
             }
         }
         catch {
