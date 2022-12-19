@@ -34,7 +34,7 @@ final class ExchangeRate: Model, Content {
 
     init(id: UUID? = nil, exchangeRateTable: [String: Double]) {
         self.id = id
-        self.timestamp = Int(Date.now.timeIntervalSince1970)
+        self.timestamp = Int(Date().timeIntervalSince1970)
         self.rates = exchangeRateTable
     }
     

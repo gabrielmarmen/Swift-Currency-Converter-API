@@ -32,11 +32,6 @@ public func configure(_ app: Application) throws {
     
     //Scheduling and starting ScheduledJobs
     app.queues.schedule(GetLatestExchangeRateJob(app: app))
-        .at(Date(timeIntervalSince1970: Date.now.timeIntervalSince1970 + 1))
+        .at(Date(timeIntervalSince1970: Date().timeIntervalSince1970 + 1))
     try app.queues.startScheduledJobs()
-    
-    
-    
-
-    
 }

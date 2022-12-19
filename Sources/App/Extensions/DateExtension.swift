@@ -9,7 +9,7 @@ import Foundation
 
 extension Date {
     static var debugTimeStamp: String {
-        let date = Date.now
+        let date = Date()
         let calendar = Calendar.current
         let year = calendar.component(.year, from: date)
         let month = calendar.component(.month, from: date)
